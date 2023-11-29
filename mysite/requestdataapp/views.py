@@ -1,5 +1,4 @@
 from django.core.files.storage import FileSystemStorage
-from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
@@ -14,7 +13,8 @@ def handle_file_upload(request: HttpRequest) -> HttpResponse:
         myfile_size_mb = round((myfile.size/1024)/1024, 2)
         if myfile.size > max_file_size_mb * 1024 ** 2:
             error_message = ("Размер файла не должен привышать {size} Мб<br>Ваш размер {file_size_mb} Мб"
-                             .format(size=max_file_size_mb,file_size_mb=myfile_size_mb,))
+                             .format(size=max_file_size_mb,
+                                     file_size_mb=myfile_size_mb,))
             return HttpResponse(error_message, status=400)
         fs = FileSystemStorage(location='upload/')
         filename = fs.save(myfile.name, myfile)
