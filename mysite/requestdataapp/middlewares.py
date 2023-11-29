@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.shortcuts import render
 
 
-class CountRequestMiddleware:
+class Throttling_middleware:
     def __init__(self, get_response):
         self.get_response = get_response
         self.requests_count = 0
