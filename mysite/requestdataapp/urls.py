@@ -6,4 +6,5 @@ app_name = "requestdataapp"
 
 urlpatterns = [
     path("upload/", handle_file_upload, name="upload-file"),
+    path("error/", handle_file_upload, name="error-request"),
 ]
