@@ -6,8 +6,9 @@ from .models import Product, Order
 from .admin_mixins import ExportAsCSVMixin
 
 
-class OrderInLine(admin.TabularInline):
+class OrderInline(admin.TabularInline):
     model = Product.orders.through
+
 
 @admin.action(description="Archive products")
 def mark_archived(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset: QuerySet):
@@ -27,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
         "export_csv",
     ]
     inlines = [
-        OrderInLine,
+        OrderInline,
     ]
     # list_display = "pk", "name", "description", "price", "discount"
     list_display = "pk", "name", "description_short", "price", "discount", "archived"
@@ -36,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
     search_fields = "name", "description"
     fieldsets = [
         (None, {
-            "fields": ("name", "description"),
+           "fields": ("name", "description"),
         }),
         ("Price options", {
             "fields": ("price", "discount"),
@@ -55,18 +56,20 @@ class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
         return obj.description[:48] + "..."
 
 
-class ProductInLine(admin.StackedInline):
+# admin.site.register(Product, ProductAdmin)
+
+
+# class ProductInline(admin.TabularInline):
+class ProductInline(admin.StackedInline):
     model = Order.products.through
 
-
-# admin.site.register(Product, ProductAdmin)
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [
-        ProductInLine,
+        ProductInline,
     ]
-    list_display = "delivery_address", "promocode", "create_at", "user_verbose"
+    list_display = "delivery_address", "promocode", "created_at", "user_verbose"
 
     def get_queryset(self, request):
         return Order.objects.select_related("user").prefetch_related("products")

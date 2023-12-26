@@ -13,7 +13,7 @@ class Throttling_middleware:
         self.exception_count = 0
 
     def __call__(self, request: HttpRequest):
-        time_delay = 10
+        time_delay = 0.1
         if not self.requests_time:
             print("Это первый request после перезапуска сервера, словарь еще пуст.")
         else:
