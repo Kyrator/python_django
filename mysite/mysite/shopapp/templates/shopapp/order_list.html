@@ -1,0 +1,42 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Orders list
+{% endblock %}
+
+{% block body %}
+  <h1>Заказы:</h1>
+  {% if object_list %}
+    <div>
+      {% for order in object_list %}
+        <div>
+          <p><a href="{% url 'shopapp:order_details' pk=order.pk %}"
+          >Детали заказа #{{ order.pk }}</a></p>
+          <p>Order by {% firstof order.user.first_name order.user.username %}</p>
+          <p>Промокод: <code>{{ order.promocode }}</code></p>
+          <p>Адрес доставки: {{ order.delivery_address }}</p>
+          <div>
+            Продукты в заказе:
+            <ul>
+              {% for product in order.products.all %}
+                <li>{{ product.name }} цена:{{ product.price }} руб.</li>
+              {% endfor %}
+
+            </ul>
+
+          </div>
+
+        </div>
+      {% endfor %}
+      <p>
+             <a href="{% url 'shopapp:order_create' %}">Создать новый заказ!</a>
+          </p>
+    </div>
+  {% else %}
+    <h3>No orders yet</h3>
+          <p>
+             <a href="{% url 'shopapp:order_create' %}">Создать новый заказ!</a>
+          </p>
+
+  {% endif %}
+{% endblock %}

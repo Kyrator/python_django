@@ -72,13 +72,13 @@ class ProductCreateView(UserPassesTestMixin, CreateView):
     def test_func(self):
         return self.request.user.is_superuser
     model = Product
-    fields = "name", "price", "description", "discount"
+    fields = "name", "price", "description", "discount", "preview"
     success_url = reverse_lazy("shopapp:products_list")
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = "name", "price", "description", "discount"
+    fields = "name", "price", "description", "discount", "preview"
     template_name_suffix = "_update_form"
 
     def get_success_url(self):

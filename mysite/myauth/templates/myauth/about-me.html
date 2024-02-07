@@ -1,19 +1,48 @@
 {% extends 'myauth/base.html' %}
 
 {% block title %}
-  About Me
+  О пользователе
 {% endblock %}
 
+
 {% block body %}
-    <h1>User info</h1>
-    {% if user.is_authenticated %}
-        <h2>Detail</h2>
-        <p>Username: {{ user.username }}</p>
-        <p>First name: {{ user.first_name }}</p>
-        <p>Last name: {{ user.last_name }}</p>
-        <p>Email: {{ user.email }}</p>
-        <p>Bio: {{ user.profile.bio }}</p>
+
+<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+      <h3 class="display-4 fw-normal">About me</h3>
+
+  {% if user.is_authenticated %}
+
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Имя: {{ user.first_name }}</p>
+    <p>Фамилия: {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Биография: {{ user.profile.bio }}</p>
+    <p>Аватар: {{ user.profile.url }} </p>
+    {% if user.profile.avatar %}
+
+      <img width="250" height="250" src="{{ user.profile.avatar.url }}" alt="{{ user.profile.avatar.name }}">
     {% else %}
-        <h2>User is anonymous</h2>
-    {% endif %}
+        <div>Аватарка пока не загружена</div>
+    {% endif %}<br><br>
+
+  <div>
+    <a href="{% url 'myauth:avatar_update' pk=user.pk %}">Обновить аватарку пользователя {{user.username}}</a>
+  </div>
+
+  <div>
+    <a href="{% url 'myauth:list_users' %}">Вывести список всех пользователей</a>
+  </div>
+  <br>
+  <div>
+    <a href="{% url 'myauth:logout' %}">Выход</a>
+  </div>
+
+  {% else %}
+    <h2>Вход не выполнен!</h2>
+    <div>
+      <a href="{% url 'myauth:login' %}">Вход или регистрация</a>
+    </div>
+  {% endif %}
+  </div>
+
 {% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Пользователь #{{ user.pk }}
+{% endblock %}
+
+{% block body %}
+<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+  {% if user.is_authenticated %}
+    <h5>Имя пользователя: <strong>{{ user.username }}</strong></h5><br>
+      <div>Биография: <em>{{ user.profile.bio }}</em></div>
+      <div>Фамилия: {{ user.last_name }}</div>
+      <div>Имя: {{ user.first_name }}</div>
+      <div>Email: {{ user.email }}</div>
+
+      <div>
+        {% if user.pk == request.user.pk %}
+          <a href="{% url 'myauth:avatar_update' user.pk %}">
+          Вы можете обновить свою аватарку
+        </a>
+        {% endif %}
+
+      </div>
+      {% if user.profile.avatar%}
+        <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.avatar.name }}">
+      {% endif %}
+
+    <div>
+      {% if request.user.is_staff %}
+        <a href="{% url 'myauth:avatar_update' user.pk %}">
+          Обновить аватарку пользователя: {{user.username}}
+        </a>
+      {% endif %}
+
+    </div>
+    <br><br>
+
+
+  <div>
+      <a href="{% url 'myauth:list_users' %}">Назад, к списку пользователей</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

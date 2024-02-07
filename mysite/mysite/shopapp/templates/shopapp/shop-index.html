@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Shop Index
+{% endblock %}
+
+
+{% block body %}
+  <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+      <h1 class="display-4 fw-normal">Главная страница магазина</h1>
+    </div>
+  <ul>
+      {% for name, price in products %}
+        <li>{{ name }} ({{ name|length }}) for ${{ price }}</li>
+        {% if name|length_is:'7' %}
+          <span>Lucky product!</span>
+        {% endif %}
+      {% empty %}
+        No products here
+      {% endfor %}
+
+    </ul>
+  <div>
+    <ul>
+      <li>
+        <a href="{% url 'shopapp:products_list' %}">Список продуктов</a>
+      </li>
+      <li>
+        <a href="{% url 'shopapp:orders_list' %}">Список заказов</a>
+      </li>
+
+      {% if perms.shopapp.add_product %}
+      <li>
+        <a href="{% url 'shopapp:product_create' %}">Создать новый продукт</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+
+{% endblock %}

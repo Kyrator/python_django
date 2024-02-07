@@ -4,13 +4,18 @@
   Login
 {% endblock %}
 
-{% block body %}
 
-<form method="post">
+{% block body %}
+  <h2>Введите данные пользователя или зарегистрируйтесь</h2>
+  <br>
+  <form method="post">
     {% csrf_token %}
 
     {{ form.as_p }}
 
     <button type="submit">Login</button>
-</form>
+  </form>
+<div><br>
+  <a href="{% url 'myauth:register' %}">Регистрация нового пользователя</a>
+</div>
 {% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Список продуктов
+{% endblock %}
+
+{% block body %}
+<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+      <h1 class="display-4 fw-normal">Список продуктов</h1>
+
+  {% if products %}
+    <div>
+    {% for product in products %}
+      <div class="alert alert-warning mt-2">
+        <p><a href="{% url 'shopapp:product_details' pk=product.pk %}"
+        >Name: {{ product.name }}</a></p>
+        <p>Price: {{ product.price }}</p>
+        <p>Discount: {% firstof product.discount 'no discount' %}</p>
+        {% if product.preview %}
+          <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    </div>
+
+  {% else %}
+    <h3>No products yet</h3>
+  {% endif %}
+  <!-- Если пользователь вошел в систему, можно ему показать ссылку на форму
+  по созданию нового продукта, а если нет - преложить вход -->
+  {% if user.is_authenticated %}
+  <div>
+    {% if perms.shopapp.add_product %}
+      <br><a href="{% url 'shopapp:product_create' %}">Создать новый продукт</a><br>
+    {% else %}
+      <h3>Вы не имеете прав для создания продуктов</h3>
+    {% endif %}
+  </div></div>
+  {% else %}
+    <h2>Вход не выполнен</h2>
+    <div>
+      <a href="{% url 'myauth:login' %}">Войдите, чтобы создать новый продукт!</a>
+    </div>
+  {% endif %}
+{% endblock %}

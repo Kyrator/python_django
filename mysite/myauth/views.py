@@ -5,9 +5,12 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, CreateView
-
+from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
+from django.shortcuts import reverse
 from .models import Profile
+from django.contrib.auth.models import User
+from .forms import ProfileEditForm
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 class AboutMeView(TemplateView):
@@ -31,6 +34,34 @@ class RegisterView(CreateView):
         )
         login(request=self.request, user=user)
         return response
+
+class AvatarUpdateView(UserPassesTestMixin, UpdateView):
+    def test_func(self):
+        # если пользователь из запроса совпадает с пользователем queryset то он может
+        # сменить аватарку, или это админ
+        if (self.request.user.id == self.get_object().user.profile.id
+                or self.request.user.is_staff):
+            return True
+
+    model = Profile
+    template_name = "myauth/avatar_update.html"
+    form_class = ProfileEditForm
+
+    def get_success_url(self):
+        return reverse("myauth:list_users", )
+
+
+class ListUsersView(ListView):
+    template_name = 'myauth/list_users.html'
+    # model = Product
+    context_object_name = "list_users"
+    queryset = User.objects.all()
+
+
+class UserDetailsView(DetailView):
+    template_name = 'myauth/user_details.html'
+    queryset = User.objects.select_related("profile")
+    context_object_name = "profile"
 
 
 class MyLogoutView(LogoutView):

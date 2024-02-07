@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import Profile
 
-# Register your models here.
+
+class UserProfile(admin.ModelAdmin):
+    list_display = "bio", "avatar"
+
+
+admin.site.register(Profile, UserProfile)
