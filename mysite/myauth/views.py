@@ -11,6 +11,7 @@ from .models import Profile
 from django.contrib.auth.models import User
 from .forms import ProfileEditForm
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.utils.translation import gettext_lazy as _, ngettext
 
 
 class AboutMeView(TemplateView):
@@ -34,6 +35,7 @@ class RegisterView(CreateView):
         )
         login(request=self.request, user=user)
         return response
+
 
 class AvatarUpdateView(UserPassesTestMixin, UpdateView):
     def test_func(self):
@@ -95,3 +97,21 @@ def get_session_view(request: HttpRequest) -> HttpResponse:
 class FooBarView(View):
     def get(self, request: HttpRequest) -> JsonResponse:
         return JsonResponse({"foo": "bar", "spam": "eggs"})
+
+
+class HelloView(View):
+    welcome_message = _("welcome hello world")
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        items_str = request.GET.get("items") or 0
+        items = int(items_str)
+        products_line = ngettext(
+            "one product",
+            "{count} products",
+            items,
+        )
+        products_line = products_line.format(count=items)
+        return HttpResponse(
+            f"<h1>{self.welcome_message}!</h1>"
+            f"\n<h2>{products_line}</h2>"
+        )

@@ -14,6 +14,7 @@ from .views import (
     AboutMeView,
     AvatarUpdateView,
     UserDetailsView,
+    HelloView,
 
 )
 
@@ -28,6 +29,7 @@ urlpatterns = [
         ),
         name="login",
     ),
+    path("hello/", HelloView.as_view(), name="hello"),
     path("logout/", MyLogoutView.as_view(), name="logout"),
     path("about-me/", AboutMeView.as_view(), name="about-me"),
     path("register/", RegisterView.as_view(), name="register"),
